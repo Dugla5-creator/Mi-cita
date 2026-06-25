@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Una propuesta diferente... 🫶​</title>
+    <style>
+        body {
+            background-color: #fde8ed;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 320px;
+            position: relative;
+        }
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 1.4rem;
+        }
+        p {
+            color: #555;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            position: relative;
+            height: 50px;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        #btn-yes {
+            background-color: #ffb6c1;
+            color: white;
+            z-index: 2;
+        }
+        #btn-yes:hover {
+            background-color: #ff91a4;
+        }
+        #btn-no {
+            background-color: #ddd;
+            color: #333;
+            position: absolute;
+            z-index: 9999;
+        }
+        #btn-next {
+            background-color: #333;
+            color: white;
+            width: 100%;
+            margin-top: 15px;
+            display: none; /* Oculto hasta que copie el mensaje */
+        }
+        #btn-next:hover {
+            background-color: #555;
+        }
+        /* Pantallas ocultas por defecto */
+        #step-2, #step-3, #step-4 {
+            display: none;
+        }
+        input[type="date"], input[type="time"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        #mensaje-final {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-style: italic;
+            color: #333;
+            border: 1px dashed #ccc;
+            user-select: all;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card" id="step-1">
+        <h2>🌸 ¿Te gustaría volver a salir conmigo? 👉👈 🌸</h2>
+        <div class="btn-container">
+            <button id="btn-yes">Sí 🩷</button>
+            <button id="btn-no" style="right: 20px;">No 🐾</button>
+        </div>
+    </div>
+
+    <div class="card" id="step-2">
+        <h2>Si? Mira que elegir el "no" era mas facil..... 🤭</h2>
+        <p>🗓️🐾Cuando estas libre?<br><br>Elegí el día y la hora. Yo me encargo del resto, podés confiar en mí:</p>
+        <input type="date" id="date-picker">
+        <input type="time" id="time-picker">
+        <button id="btn-confirm" style="background-color: #ffb6c1; color: white; width: 100%;">Confirmar la cita 💞​</button>
+    </div>
+
+    <div class="card" id="step-3">
+        <h2 style="font-size: 18px;">Si estás convencida...<br>Copiá este mensaje y mandámelo 📱📩​:</h2>
+        <p id="mensaje-final"></p>
+        <button id="btn-copy" style="background-color: #ffb6c1; color: white; width: 100%;">Copiar mensaje 📋</button>
+        <button id="btn-next">Siguiente ➡️</button>
+    </div>
+
+    <div class="card" id="step-4">
+        <h2>🏵️​💫​ Preparate porque nos vamos a divertir... ​💫​🏵️</h2>
+        <p>PD: ​Fue cortito pero queria que sea algo mas especial para vos, no una propuesta sencilla ​<br>Ah, y no te olvides de ponerte la bufanda mas linda que tengas que hace frio... ❄️​☃️​<br><br>❣️​❣️​❣️​❣️​❣️​</p>
+    </div>
+
+    <script>
+        const step1 = document.getElementById('step-1');
+        const step2 = document.getElementById('step-2');
+        const step3 = document.getElementById('step-3');
+        const step4 = document.getElementById('step-4');
+        
+        const btnYes = document.getElementById('btn-yes');
+        const btnNo = document.getElementById('btn-no');
+        const btnConfirm = document.getElementById('btn-confirm');
+        const btnCopy = document.getElementById('btn-copy');
+        const btnNext = document.getElementById('btn-next');
+        
+        const datePicker = document.getElementById('date-picker');
+        const timePicker = document.getElementById('time-picker');
+        const mensajeFinal = document.getElementById('mensaje-final');
+
+        // Lógica de escape
+        const esquivarBoton = (e) => {
+            e.preventDefault(); 
+            const maxX = window.innerWidth - btnNo.clientWidth - 20;
+            const maxY = window.innerHeight - btnNo.clientHeight - 20;
+            const randomX = Math.max(10, Math.floor(Math.random() * maxX));
+            const randomY = Math.max(10, Math.floor(Math.random() * maxY));
+            btnNo.style.position = 'fixed';
+            btnNo.style.left = `${randomX}px`;
+            btnNo.style.top = `${randomY}px`;
+        };
+
+        btnNo.addEventListener('mouseover', esquivarBoton);
+        btnNo.addEventListener('touchstart', esquivarBoton);
+
+        // Paso 1 al Paso 2
+        btnYes.addEventListener('click', () => {
+            step1.style.display = 'none';
+            step2.style.display = 'block';
+        });
+
+        // Paso 2 al Paso 3
+        btnConfirm.addEventListener('click', () => {
+            const fechaRaw = datePicker.value;
+            const hora = timePicker.value;
+
+            if (!fechaRaw || !hora) {
+                alert('Ey, completá la fecha y la hora primero.');
+                return;
+            }
+
+            const partesFecha = fechaRaw.split('-');
+            const fechaFormateada = `${partesFecha[2]}/${partesFecha[1]}/${partesFecha[0]}`;
+
+            mensajeFinal.innerText = `Hola Du, te espero lista para salir el ${fechaFormateada} a las ${hora}hs con mi mejor bufanda...`;
+            
+            step2.style.display = 'none';
+            step3.style.display = 'block';
+        });
+
+        // Copiar y mostrar botón Siguiente
+        btnCopy.addEventListener('click', () => {
+            navigator.clipboard.writeText(mensajeFinal.innerText).then(() => {
+                btnCopy.innerText = '¡Copiado! ✔️';
+                btnCopy.style.backgroundColor = '#4caf50';
+                btnNext.style.display = 'block'; // Revela el botón siguiente
+            }).catch(err => {
+                alert('Hubo un error. Seleccioná el texto y copialo a mano.');
+                btnNext.style.display = 'block'; // Lo revela igual por si falla el copy automático
+            });
+        });
+
+        // Paso 3 al Paso 4
+        btnNext.addEventListener('click', () => {
+            step3.style.display = 'none';
+            step4.style.display = 'block';
+        });
+    </script>
+
+</body>
+</html>
